@@ -10,18 +10,20 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  NotificationServices notificationServices = NotificationServices();
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    notificationServices.requestNotificationPermission();
-  }
+  // NotificationServices notificationServices = NotificationServices();
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   notificationServices.requestNotificationPermission();
+  // }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        backgroundColor: Colors.amber,
+      ),
       body: ListView.builder(
           itemCount: 8,
           itemBuilder: (context, index) {
