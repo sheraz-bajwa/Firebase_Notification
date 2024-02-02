@@ -10,13 +10,17 @@ class Landing extends StatefulWidget {
 }
 
 class _LandingState extends State<Landing> {
-  // NotificationServices notificationServices = NotificationServices();
+  NotificationServices notificationServices = NotificationServices();
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   notificationServices.requestNotificationPermission();
-  // }
+  @override
+  void initState() {
+    super.initState();
+    notificationServices.requestNotificationPermission();
+    notificationServices.getdeviceToken().then((value) => {
+          print('Device Token'),
+          print(value),
+        });
+  }
 
   @override
   Widget build(BuildContext context) {
