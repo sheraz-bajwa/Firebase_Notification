@@ -42,4 +42,11 @@ class NotificationServices {
     String? token = await messaging.getToken();
     return token!;
   }
+
+  void isTokenrefresh() {
+    messaging.onTokenRefresh.listen((event) {
+      event.toString();
+      print('token refrest');
+    });
+  }
 }
