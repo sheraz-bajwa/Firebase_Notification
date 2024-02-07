@@ -16,6 +16,8 @@ class _LandingState extends State<Landing> {
   void initState() {
     super.initState();
     notificationServices.requestNotificationPermission();
+    notificationServices.FirebaseInit();
+
     notificationServices.getdeviceToken().then((value) => {
           print('Device Token'),
           print(value),

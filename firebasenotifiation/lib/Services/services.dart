@@ -1,9 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationServices {
+  
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+ 
+ 
   void requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
         alert: true,
@@ -38,11 +43,21 @@ class NotificationServices {
     }
   }
 
+//to show messgae body & title
+  void FirebaseInit() {
+    FirebaseMessaging.onMessage.listen((message) {
+      print(message.notification!.title.toString());
+      print(message.notification!.body.toString());
+    });
+  }
+
+//to get device token
   Future<String> getdeviceToken() async {
     String? token = await messaging.getToken();
     return token!;
   }
 
+//to refresh device token if problem occur
   void isTokenrefresh() {
     messaging.onTokenRefresh.listen((event) {
       event.toString();
