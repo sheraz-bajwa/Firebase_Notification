@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -45,13 +46,20 @@ class NotificationServices {
 //to show messgae body & title
   void FirebaseInit() {
     FirebaseMessaging.onMessage.listen((message) {
-      print(message.notification!.title.toString());
-      print(message.notification!.body.toString());
+      if (kDebugMode) {
+        print(message.notification!.title.toString());
+        print(message.notification!.body.toString());
+      }
+
+      showNotification(message);
     });
   }
 
+//Show notification Function
+  Future<void> showNotification(RemoteMessage message) async {}
 //
-  void initLocaclNotification() async {
+  void initLocaclNotification(
+      BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
         const AndroidInitializationSettings('defaultIcon');
     var iosInitializationSettings = const DarwinInitializationSettings();
