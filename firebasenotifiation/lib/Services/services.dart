@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class NotificationServices {
-  
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
- 
- 
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
   void requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
         alert: true,
@@ -49,6 +48,19 @@ class NotificationServices {
       print(message.notification!.title.toString());
       print(message.notification!.body.toString());
     });
+  }
+
+//
+  void initLocaclNotification() async {
+    var androidInitializationSettings =
+        const AndroidInitializationSettings('defaultIcon');
+    var iosInitializationSettings = const DarwinInitializationSettings();
+
+    var InitializedSetting = InitializationSettings(
+        android: androidInitializationSettings, iOS: iosInitializationSettings);
+
+    await flutterLocalNotificationsPlugin.initialize(InitializedSetting,
+        onDidReceiveNotificationResponse: (payload) {});
   }
 
 //to get device token
