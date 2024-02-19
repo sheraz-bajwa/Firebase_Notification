@@ -1,3 +1,6 @@
+import 'dart:io';
+import 'dart:js';
+import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -21,21 +24,23 @@ class NotificationServices {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted permission");
-      SnackBar(
-        content: Text("User Granted permission"),
-        duration: Duration(seconds: 5),
-        dismissDirection: DismissDirection.endToStart,
-      );
+      // const SnackBar(
+      //   content: Text("User Granted permission"),
+      //   duration: Duration(seconds: 5),
+      //   dismissDirection: DismissDirection.endToStart,
+      // );
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted provisional permission");
-      SnackBar(
-        content: Text("User Granted permission"),
-        duration: Duration(seconds: 5),
-        dismissDirection: DismissDirection.endToStart,
-      );
+      // const SnackBar(
+      //   content: Text("User Granted permission"),
+      //   duration: Duration(seconds: 5),
+      //   dismissDirection: DismissDirection.endToStart,
+      // );
     } else {
-      print("User denied permission");
-      SnackBar(
+      if (kDebugMode) {
+        print("User denied permission");
+      }
+      const SnackBar(
         content: Text("User Granted permission"),
         duration: Duration(seconds: 5),
         dismissDirection: DismissDirection.endToStart,
@@ -44,30 +49,63 @@ class NotificationServices {
   }
 
 //to show messgae body & title
-  void FirebaseInit() {
+  void firebaseInit() {
     FirebaseMessaging.onMessage.listen((message) {
       if (kDebugMode) {
         print(message.notification!.title.toString());
         print(message.notification!.body.toString());
       }
-
-      showNotification(message);
+      if (Platform.isAndroid) {
+        initLocaclNotification(context as BuildContext, message);
+        showNotification(message);
+      }
     });
   }
 
-//Show notification Function
-  Future<void> showNotification(RemoteMessage message) async {}
-//
+//To Show notification Function using FlutteerlocalNotification
+  Future<void> showNotification(RemoteMessage message) async {
+    AndroidNotificationChannel androidNotificationChannel =
+        AndroidNotificationChannel(Random.secure().nextInt(1000).toString(),
+            'high Importance Notification',
+            importance: Importance.max);
+
+    AndroidNotificationDetails androidNotificationDetails =
+        AndroidNotificationDetails(Random.secure().nextInt(1000).toString(),
+            'high Importance Notification',
+            channelDescription: 'Your chanel description',
+            priority: Priority.high,
+            ticker: 'ticker');
+
+    DarwinNotificationDetails darwinNotificationDetails =
+        const DarwinNotificationDetails(
+      presentAlert: true,
+      presentBadge: true,
+      presentSound: true,
+    );
+
+    NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails, iOS: darwinNotificationDetails);
+
+    Future.delayed(Duration.zero, () {
+      flutterLocalNotificationsPlugin.show(
+          0,
+          message.notification!.title.toString(),
+          message.notification!.body.toString(),
+          notificationDetails);
+    });
+  }
+
+// for Set ICon For notification & To make setting for IOS & Andoid
   void initLocaclNotification(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
-        const AndroidInitializationSettings('defaultIcon');
+        const AndroidInitializationSettings('@mipmap-mdpi/ic_launcher');
     var iosInitializationSettings = const DarwinInitializationSettings();
 
-    var InitializedSetting = InitializationSettings(
+    var initializationSetting = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
 
-    await flutterLocalNotificationsPlugin.initialize(InitializedSetting,
+    await flutterLocalNotificationsPlugin.initialize(initializationSetting,
         onDidReceiveNotificationResponse: (payload) {});
   }
 
