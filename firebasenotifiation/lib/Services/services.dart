@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:js';
 import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -49,14 +48,14 @@ class NotificationServices {
   }
 
 //to show messgae body & title
-  void firebaseInit() {
+  void firebaseInit(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) {
       if (kDebugMode) {
         print(message.notification!.title.toString());
         print(message.notification!.body.toString());
       }
       if (Platform.isAndroid) {
-        initLocaclNotification(context as BuildContext, message);
+        initLocaclNotification(context, message);
         showNotification(message);
       }
     });
@@ -70,8 +69,8 @@ class NotificationServices {
             importance: Importance.max);
 
     AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(Random.secure().nextInt(1000).toString(),
-            'high Importance Notification',
+        AndroidNotificationDetails(androidNotificationChannel.id.toString(),
+            androidNotificationChannel.name.toString(),
             channelDescription: 'Your chanel description',
             priority: Priority.high,
             ticker: 'ticker');
@@ -99,7 +98,7 @@ class NotificationServices {
   void initLocaclNotification(
       BuildContext context, RemoteMessage message) async {
     var androidInitializationSettings =
-        const AndroidInitializationSettings('@mipmap-mdpi/ic_launcher');
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
     var iosInitializationSettings = const DarwinInitializationSettings();
 
     var initializationSetting = InitializationSettings(
