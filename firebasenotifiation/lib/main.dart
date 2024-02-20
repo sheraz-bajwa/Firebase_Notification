@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebasenotifiation/Landing.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -8,7 +9,16 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // To show Notification In Background When app is not open
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandle);
+  //
   runApp(const MyApp());
+}
+
+// To show Notification In Background When app is not open
+Future<void> _firebaseMessagingBackgroundHandle(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(message.notification!.title.toString());
 }
 
 class MyApp extends StatelessWidget {
