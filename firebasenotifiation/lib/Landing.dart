@@ -1,9 +1,8 @@
 import 'package:firebasenotifiation/Services/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class Landing extends StatefulWidget {
-  Landing({super.key});
+  const Landing({super.key});
 
   @override
   State<Landing> createState() => _LandingState();
@@ -31,7 +30,7 @@ class _LandingState extends State<Landing> {
         backgroundColor: Colors.amber,
       ),
       body: ListView.builder(
-          itemCount: 8,
+          itemCount: 4,
           itemBuilder: (context, index) {
             return ListTile(
               title: Text('Sheraz'),
