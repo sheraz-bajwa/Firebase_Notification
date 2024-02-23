@@ -53,6 +53,10 @@ class NotificationServices {
       if (kDebugMode) {
         print(message.notification!.title.toString());
         print(message.notification!.body.toString());
+        print(message.data.toString());
+
+        print(message.data['type']);
+        print(message.data['id']);
       }
       if (Platform.isAndroid) {
         initLocaclNotification(context, message);
