@@ -8,7 +8,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class NotificationServices {
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
   void requestNotificationPermission() async {
@@ -23,19 +23,10 @@ class NotificationServices {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted permission");
-      // const SnackBar(
-      //   content: Text("User Granted permission"),
-      //   duration: Duration(seconds: 5),
-      //   dismissDirection: DismissDirection.endToStart,
-      // );
+     
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted provisional permission");
-      // const SnackBar(
-      //   content: Text("User Granted permission"),
-      //   duration: Duration(seconds: 5),
-      //   dismissDirection: DismissDirection.endToStart,
-      // );
-    } else {
+     } else {
       if (kDebugMode) {
         print("User denied permission");
       }
@@ -90,7 +81,7 @@ class NotificationServices {
         android: androidNotificationDetails, iOS: darwinNotificationDetails);
 
     Future.delayed(Duration.zero, () {
-      flutterLocalNotificationsPlugin.show(
+      _flutterLocalNotificationsPlugin.show(
           0,
           message.notification!.title.toString(),
           message.notification!.body.toString(),
@@ -108,7 +99,7 @@ class NotificationServices {
     var initializationSetting = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSetting,
+    await _flutterLocalNotificationsPlugin.initialize(initializationSetting,
         onDidReceiveNotificationResponse: (payload) {});
   }
 
