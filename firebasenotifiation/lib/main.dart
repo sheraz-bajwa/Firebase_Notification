@@ -9,18 +9,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // To s how Notification In Background When app is not open
-  // FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandle);
-  //
+  // To show Notification In Background When app is not open
+  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandle);
+  
   runApp(const MyApp());
 }
 
 // To show Notification In Background When app is not open
-// @pragma('vm:entry-point')
-// Future<void> _firebaseMessagingBackgroundHandle(RemoteMessage message) async {
-//   await Firebase.initializeApp();
-//   print(message.notification!.title.toString());
-// }
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandle(RemoteMessage message) async {
+  await Firebase.initializeApp();
+  print(message.notification!.title.toString());
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

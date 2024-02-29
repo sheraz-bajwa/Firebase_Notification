@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:firebasenotifiation/Screen/MessageScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -23,10 +24,9 @@ class NotificationServices {
 
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted permission");
-     
     } else if (settings.authorizationStatus == AuthorizationStatus.authorized) {
       print("User Granted provisional permission");
-     } else {
+    } else {
       if (kDebugMode) {
         print("User denied permission");
       }
@@ -52,6 +52,8 @@ class NotificationServices {
       if (Platform.isAndroid) {
         initLocaclNotification(context, message);
         showNotification(message);
+      } else {
+        showNotification(message);
       }
     });
   }
@@ -62,13 +64,14 @@ class NotificationServices {
         AndroidNotificationChannel(Random.secure().nextInt(1000).toString(),
             'high Importance Notification',
             importance: Importance.max);
-
+//to inialize android setting
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(androidNotificationChannel.id.toString(),
             androidNotificationChannel.name.toString(),
             channelDescription: 'Your chanel description',
             priority: Priority.high,
             ticker: 'ticker');
+//to inialize IOS setting
 
     DarwinNotificationDetails darwinNotificationDetails =
         const DarwinNotificationDetails(
@@ -92,15 +95,20 @@ class NotificationServices {
 // for Set ICon For notification & To make setting for IOS & Andoid
   void initLocaclNotification(
       BuildContext context, RemoteMessage message) async {
+    //to give notification icon
     var androidInitializationSettings =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
+    // to initilize setting for IOS
     var iosInitializationSettings = const DarwinInitializationSettings();
 
     var initializationSetting = InitializationSettings(
         android: androidInitializationSettings, iOS: iosInitializationSettings);
 
     await _flutterLocalNotificationsPlugin.initialize(initializationSetting,
-        onDidReceiveNotificationResponse: (payload) {});
+        onDidReceiveNotificationResponse: (payload) {
+      //to redirect from notication to a specific Screen
+      handelmessage(context, message);
+    });
   }
 
 //to get device token
@@ -115,5 +123,17 @@ class NotificationServices {
       event.toString();
       print('token refrest');
     });
+  }
+}
+
+//to redirect from notification to a specific Screen
+void handelmessage(BuildContext context, RemoteMessage message) {
+  if (message.data['type'] == 'message') {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => MessageScreen(
+                  id: message.data['id'],
+                )));
   }
 }
