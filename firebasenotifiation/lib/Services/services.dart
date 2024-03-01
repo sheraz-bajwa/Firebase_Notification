@@ -60,14 +60,14 @@ class NotificationServices {
 
 //To Show notification Function using FlutteerlocalNotification
   Future<void> showNotification(RemoteMessage message) async {
-    AndroidNotificationChannel androidNotificationChannel =
-        AndroidNotificationChannel(Random.secure().nextInt(1000).toString(),
-            'high Importance Notification',
-            importance: Importance.max);
+    AndroidNotificationChannel Channel = AndroidNotificationChannel(
+        Random.secure().nextInt(100000).toString(),
+        'high Importance Notification',
+        importance: Importance.max);
 //to inialize android setting
     AndroidNotificationDetails androidNotificationDetails =
-        AndroidNotificationDetails(androidNotificationChannel.id.toString(),
-            androidNotificationChannel.name.toString(),
+        AndroidNotificationDetails(
+            Channel.id.toString(), Channel.name.toString(),
             channelDescription: 'Your chanel description',
             priority: Priority.high,
             ticker: 'ticker');
@@ -85,7 +85,7 @@ class NotificationServices {
 
     Future.delayed(Duration.zero, () {
       _flutterLocalNotificationsPlugin.show(
-          0,
+          1,
           message.notification!.title.toString(),
           message.notification!.body.toString(),
           notificationDetails);
@@ -128,7 +128,7 @@ class NotificationServices {
 
 //to redirect from notification to a specific Screen
 void handelmessage(BuildContext context, RemoteMessage message) {
-  if (message.data['type'] == 'message') {
+  if (message.data['type'] == 'msg') {
     Navigator.push(
         context,
         MaterialPageRoute(
