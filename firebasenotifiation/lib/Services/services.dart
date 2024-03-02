@@ -12,7 +12,7 @@ class NotificationServices {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  void requestNotificationPermission() async {
+   Future<void> requestNotificationPermission() async {
     NotificationSettings settings = await messaging.requestPermission(
         alert: true,
         announcement: true,
@@ -93,7 +93,7 @@ class NotificationServices {
   }
 
 // for Set ICon For notification & To make setting for IOS & Andoid
-  void initLocaclNotification(
+   Future<void> initLocaclNotification(
       BuildContext context, RemoteMessage message) async {
     //to give notification icon
     var androidInitializationSettings =
@@ -124,16 +124,31 @@ class NotificationServices {
       print('token refrest');
     });
   }
-}
 
 //to redirect from notification to a specific Screen
-void handelmessage(BuildContext context, RemoteMessage message) {
-  if (message.data['type'] == 'msg') {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MessageScreen(
-                  id: message.data['id'],
-                )));
+  void handelmessage(BuildContext context, RemoteMessage message) {
+    if (message.data['type'] == 'msg') {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MessageScreen(
+                    id: message.data['id'],
+                  )));
+    }
+  }
+
+  //When app is in background or kill //
+//to check Initial message is not null & then redirect from notification to specific Screen
+  Future<void> setupInterctMessageInBackground(BuildContext context) async {
+    //when app is terminated
+    RemoteMessage? initialMessage =
+        await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      handelmessage(context, initialMessage);
+    }
+    //when app is in Background
+    FirebaseMessaging.onMessageOpenedApp.listen((event) {
+      handelmessage(context, event);
+    });
   }
 }
